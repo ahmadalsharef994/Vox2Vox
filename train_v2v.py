@@ -6,6 +6,18 @@ from losses import *
 import matplotlib.image as mpim
 from sys import stdout
 
+# inspired by https://github.com/keras-team/keras/issues/9395
+def dice_coef_necrotic(y_true, y_pred, epsilon=1e-6):
+    intersection = K.sum(K.abs(y_true[:,:,:,1] * y_pred[:,:,:,1]))
+    return (2. * intersection) / (K.sum(K.square(y_true[:,:,:,1])) + K.sum(K.square(y_pred[:,:,:,1])) + epsilon)
+
+def dice_coef_edema(y_true, y_pred, epsilon=1e-6):
+    intersection = K.sum(K.abs(y_true[:,:,:,2] * y_pred[:,:,:,2]))
+    return (2. * intersection) / (K.sum(K.square(y_true[:,:,:,2])) + K.sum(K.square(y_pred[:,:,:,2])) + epsilon)
+
+def dice_coef_enhancing(y_true, y_pred, epsilon=1e-6):
+    intersection = K.sum(K.abs(y_true[:,:,:,3] * y_pred[:,:,:,3]))
+    return (2. * intersection) / (K.sum(K.square(y_true[:,:,:,3])) + K.sum(K.square(y_pred[:,:,:,3])) + epsilon)
 
 # class weights
 class_weights = np.load('class_weights.npy')
