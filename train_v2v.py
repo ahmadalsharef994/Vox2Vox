@@ -1,3 +1,16 @@
+import tensorflow.keras
+import tensorflow.keras.backend as K
+
+def dice_coef_necrotic(y_true, y_pred, epsilon=1e-6):
+    intersection = K.sum(K.abs(y_true[:,:,:,1] * y_pred[:,:,:,1]))
+    return (2. * intersection) / (K.sum(K.square(y_true[:,:,:,1])) + K.sum(K.square(y_pred[:,:,:,1])) + epsilon)
+def dice_coef_edema(y_true, y_pred, epsilon=1e-6):
+    intersection = K.sum(K.abs(y_true[:,:,:,2] * y_pred[:,:,:,2]))
+    return (2. * intersection) / (K.sum(K.square(y_true[:,:,:,2])) + K.sum(K.square(y_pred[:,:,:,2])) + epsilon)
+def dice_coef_enhancing(y_true, y_pred, epsilon=1e-6):
+    intersection = K.sum(K.abs(y_true[:,:,:,3] * y_pred[:,:,:,3]))
+    return (2. * intersection) / (K.sum(K.square(y_true[:,:,:,3])) + K.sum(K.square(y_pred[:,:,:,3])) + epsilon)
+
 import os
 import numpy as np
 import tensorflow as tf
@@ -77,9 +90,11 @@ def fit(train_gen, valid_gen, alpha, epochs):
             epoch_dice_loss.update_state(losses[1])
             epoch_disc_loss.update_state(losses[2])
             # TC_loss, WT_loss, ET_loss, IOU_mean
-            
-            stdout.write('\rBatch: {}/{} - loss: {:.4f} - dice_loss: {:.4f} - disc_loss: {:.4f}'
-                         .format(b, Nt, epoch_v2v_loss.result(), epoch_dice_loss.result(), epoch_disc_loss.result()))
+            dice_coef_necrotic = dice_coef_necrotic(Xb, yb)
+            print("dice_coef_necrotic:"+dice_coef_necrotic)
+
+            stdout.write('\rBatch: {}/{} - loss: {:.4f} - dice_loss: {:.4f} - disc_loss: {:.4f} - disc_loss: {:.4f} '
+                         .format(b, Nt, epoch_v2v_loss.result(), epoch_dice_loss.result(), epoch_disc_loss.result(), dice_coef_necrotic))
             stdout.flush()
         history['train'].append([epoch_v2v_loss.result(), epoch_dice_loss.result(), epoch_disc_loss.result()])
         
@@ -88,6 +103,8 @@ def fit(train_gen, valid_gen, alpha, epochs):
             epoch_v2v_loss_val.update_state(losses_val[0])
             epoch_dice_loss_val.update_state(losses_val[1])
             epoch_disc_loss_val.update_state(losses_val[2])
+            dice_coef_necrotic = dice_coef_necrotic(Xb, yb)
+            print("dice_coef_necrotic:"+dice_coef_necrotic)
             
         stdout.write('\n               loss_val: {:.4f} - dice_loss_val: {:.4f} - disc_loss_val: {:.4f}'
                      .format(epoch_v2v_loss_val.result(), epoch_dice_loss_val.result(), epoch_disc_loss_val.result()))
