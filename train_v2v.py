@@ -48,7 +48,7 @@ def test_step(image, target, alpha):
 
     gen_loss, dice_loss, disc_loss_gen = generator_loss(target, gen_output, disc_fake_output, class_weights, alpha)
         
-    return gen_loss, dice_loss, disc_loss_gen
+    return gen_loss, dice_loss, disc_loss_gen # TC_loss, WT_loss, ET_loss, IOU_mean
 
 def fit(train_gen, valid_gen, alpha, epochs):
     
@@ -76,6 +76,7 @@ def fit(train_gen, valid_gen, alpha, epochs):
             epoch_v2v_loss.update_state(losses[0])
             epoch_dice_loss.update_state(losses[1])
             epoch_disc_loss.update_state(losses[2])
+            # TC_loss, WT_loss, ET_loss, IOU_mean
             
             stdout.write('\rBatch: {}/{} - loss: {:.4f} - dice_loss: {:.4f} - disc_loss: {:.4f}'
                          .format(b, Nt, epoch_v2v_loss.result(), epoch_dice_loss.result(), epoch_disc_loss.result()))
