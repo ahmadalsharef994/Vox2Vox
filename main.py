@@ -10,7 +10,7 @@ parser.add_argument('-g', '--gpu', default=0, type=int, help='GPU position')
 parser.add_argument('-nc', '--num_classes', default=4, type=int, help='number of classes')
 parser.add_argument('-bs', '--batch_size', default=4, type=int, help='batch size')
 parser.add_argument('-a', '--alpha', default=5, type=int, help='alpha weight')
-parser.add_argument('-ne', '--num_epochs', default=200, type=int, help='number of epochs')
+parser.add_argument('-ne', '--num_epochs', default=100, type=int, help='number of epochs')
 
 args = parser.parse_args()
 gpu = args.gpu
