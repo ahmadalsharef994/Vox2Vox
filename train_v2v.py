@@ -1,5 +1,3 @@
-import keras
-import keras.backend as K
 
 
 import os
@@ -53,19 +51,6 @@ def test_step(image, target, alpha):
     gen_loss, dice_loss, disc_loss_gen = generator_loss(target, gen_output, disc_fake_output, class_weights, alpha)
         
     return gen_loss, dice_loss, disc_loss_gen # TC_loss, WT_loss, ET_loss, IOU_mean
-
-# inspired by https://github.com/keras-team/keras/issues/9395
-def dice_coef_necrotic(y_true, y_pred, epsilon=1e-6):
-    intersection = K.sum(K.abs(y_true[:,:,:,1] * y_pred[:,:,:,1]))
-    return (2. * intersection) / (K.sum(K.square(y_true[:,:,:,1])) + K.sum(K.square(y_pred[:,:,:,1])) + epsilon)
-
-def dice_coef_edema(y_true, y_pred, epsilon=1e-6):
-    intersection = K.sum(K.abs(y_true[:,:,:,2] * y_pred[:,:,:,2]))
-    return (2. * intersection) / (K.sum(K.square(y_true[:,:,:,2])) + K.sum(K.square(y_pred[:,:,:,2])) + epsilon)
-
-def dice_coef_enhancing(y_true, y_pred, epsilon=1e-6):
-    intersection = K.sum(K.abs(y_true[:,:,:,3] * y_pred[:,:,:,3]))
-    return (2. * intersection) / (K.sum(K.square(y_true[:,:,:,3])) + K.sum(K.square(y_pred[:,:,:,3])) + epsilon)
 
 def fit(train_gen, valid_gen, alpha, epochs):
     
