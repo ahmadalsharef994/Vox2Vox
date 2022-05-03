@@ -6,8 +6,8 @@ import keras.backend as K
 
 
 def diceNecrotic(y_true, y_pred, epsilon=1e-6):
-    y_true = tf.convert_to_tensor(y_true, 'float32')
-    y_pred = tf.convert_to_tensor(y_pred, y_true.dtype)
+    y_true = y_true.numpy()
+    y_pred = y_pred.numpy()
     intersection = K.sum(K.abs(y_true[:, :, :, 1] * y_pred[:, :, :, 1]))
     return (2. * intersection) / (K.sum(K.square(y_true[:, :, :, 1])) + K.sum(K.square(y_pred[:, :, :, 1])) + epsilon)
 
