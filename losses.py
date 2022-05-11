@@ -62,7 +62,7 @@ def generator_loss(target, gen_output, disc_fake_output, class_weights, alpha):
     #dice_enhancing = diceEnhancing(target, gen_output)
     #print('test_step:  dice_necrotic, dice_edema, dice_enhancing')
     #print(dice_necrotic, dice_edema, dice_enhancing)
-    print(target.item())
-    print(gen_output.item())
+    print(target)
+    print(gen_output)
 
     return gen_loss, dice_loss, disc_loss
